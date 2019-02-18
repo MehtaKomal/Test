@@ -1,0 +1,55 @@
+{% extends 'student_base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load staticfiles %}
+{% block content_student %}
+{% csrf_token %}
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <div class="content-wrapper">
+                <section class="content" >
+                    <br>
+                    <br>
+                    <br>
+                    {% for each_activity in activity %}
+                        <div class="col-md-6">
+                            <div class="box box-warning box-solid">
+                                 <div class="box-header with-border">
+                              <h3 class="box-title">{{ each_activity.activity.title }}</h3>
+
+                              <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                              </div>
+                              <!-- /.box-tools -->
+                            </div>
+                                <!-- /.box-header -->
+                                <div class="box-body" style="">
+                                 <div class="form-group">
+                                  <label for="description">Expert:</label>
+                                  {{ each_activity.expert.name }}
+                                  </div>
+                              <div class="form-group">
+                                  <label for="description">Description</label>
+                                  <textarea class="form-control" id="description" readonly style="border:0">{{ each_activity.activity.description }}</textarea>
+                                  </div>
+                                <div class="form-group">
+                                  <label for="time">Time</label>
+                                  <input type="text" id="time" value="{{ each_activity.activity.time }}" style="border:0" readonly>
+                                </div>
+                                <div class="form-group">
+                                  <label for="date">Date</label>
+                                  <input type="text" id="date" style="border:0" value="{{ each_activity.activity.date }}" readonly>
+                                </div>
+                            </div>
+                                <!-- /.box-body -->
+                                <div class="box-footer">
+                                    <input class="btn btn-sm btn-warning disabled" type="button" name="Join activity" value="Join activity" id="{{ each_activity.activity.id }}_activity"/>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                </section>
+    </div>
+{% endblock %}

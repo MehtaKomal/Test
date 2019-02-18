@@ -1,0 +1,208 @@
+{% extends 'expert_base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load staticfiles %}
+
+{% block content_expert %}
+<script>
+function accept_request(student_id, activity_id,expert_id) {
+    $.ajax({url: "/accept_request/"+ student_id+"/"+activity_id+"/"+expert_id, success: function(result){
+        location.href= '/add_lecture'
+            }
+        });
+
+}
+</script>
+<!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+<br>
+  <br>
+    <section class="content">
+            <div class="col-md-12">
+          <!-- general form elements -->
+
+              <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab_1" data-toggle="tab">ADD</a></li>
+              <li><a href="#tab_2" data-toggle="tab">Recent Activity</a></li>
+
+
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab_1">
+                 <div class="box box-primary">
+            <!-- form start -->
+            <form role="form" method="post">
+            {% csrf_token %}
+              <div class="box-body">
+               <table>
+                  {% for field in form %}
+                      {% if  field.label == 'Expert id'%}
+                          {% elif field.label == 'Date'%}
+                           <tr>
+                              <td>
+                                 <label> {{ field.label }} </label>
+                              </td>
+                              <td>
+                                  {% render_field field type='date' %}
+                              </td>
+                          </tr>
+                          {% elif field.label == 'Time'%}
+                           <tr>
+                              <td>
+                                 <label> {{ field.label }} </label>
+                              </td>
+                              <td>
+                                  {% render_field field type='time' %}
+                              </td>
+                          </tr>
+
+                      {% else %}
+
+                          <tr>
+                              <td>
+                                 <label> {{ field.label }} </label>
+                              </td>
+                              <td>
+                                  {{ field }}
+                              </td>
+                          </tr>
+                      {% endif %}
+                      <tr>
+                      <td width="4px">
+                            <br>
+                      </td>
+                      <td>
+
+                      </td>
+                      </tr>
+                  {% endfor %}
+                </table>
+
+
+
+
+              </div>
+              <!-- /.box-body -->
+
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="tab_2">
+          <!-- general form elements -->
+
+            {% for each_lecture in add_lect %}
+                <div class="box box-warning box-solid">
+            <div class="box-header with-border">
+              <h3 class="box-title">{{ each_lecture.title }}</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="">
+              <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea class="form-control" id="description" readonly style="border:0">{{ each_lecture.description }}</textarea>
+				  </div>
+                <div class="form-group">
+                  <label for="time">Time</label>
+                  <input type="text" id="time" value="{{ each_lecture.time }}" style="border:0" readonly>
+                </div>
+                <div class="form-group">
+                  <label for="date">Date</label>
+                  <input type="text" id="date" style="border:0" value="{{ each_lecture.date }}" readonly>
+                </div>
+            </div>
+            <!-- /.box-body -->
+                <div class="box-footer">
+                    <div class="col-md-5">
+          <div class="box box-default collapsed-box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Student Attending</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="display: none;">
+              {% for key,value in student_attending.items %}
+                  {% if key == each_lecture.id %}
+
+                      <ul>
+
+                      {% for each_users in value %}
+                      <li>
+                          {{ each_users }}
+                      </li>
+                      {% endfor %}
+                      </ul>
+
+                  {% endif %}
+              {% endfor %}
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+                    <div class="col-md-5">
+          <div class="box box-default collapsed-box">
+            <div class="box-header with-border">
+              <h3 class="box-title">Student requested</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                </button>
+              </div>
+              <!-- /.box-tools -->
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body" style="display: none;">
+              {% for key,value in student_requested.items %}
+                  {% if key == each_lecture.id %}
+                      <ul>
+                      {% for each_user in value %}
+                      <li>
+                          <a href="/show_student_profile/{{ each_user.id }}">{{ each_user.name }}</a> &nbsp; &nbsp;
+                           <input type="button" class="btn btn-warning" name="Accept" value="Accept" style="width: 25%" onclick="accept_request({{ each_user.id }},{{ each_lecture.id }},{{ expert.id }})">
+                      </li>
+                      {% endfor %}
+                      </ul>
+
+                  {% endif %}
+              {% endfor %}
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+
+                </div>
+          </div>
+            {% endfor %}
+
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+
+          </div>
+          </div>
+          <!-- /.box -->
+        </div>
+
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock %}
