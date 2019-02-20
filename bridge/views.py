@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+import datetime as datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.contrib.auth.models import User
@@ -682,8 +683,9 @@ def add_lecture(request):
     if request.method == 'POST':
         if expert_exist:
             # check whether it's valid:
+            import datetime
             a = AddLecture.objects.create(title=request.POST['title'],description=request.POST['description'],
-                                             time=request.POST['time'],date=request.POST['date'],expert_id_id=expert_login.id,update_timestamp=datetime.now())
+                                             time=request.POST['time'],date=request.POST['date'],expert_id_id=expert_login.id,update_timestamp=datetime.datetime.now())
             msg = expert_login.name + " has added new Lecture."
             expert_following = Expert_Following.objects.filter(Expert_id_id=expert_login.id).filter(Is_follow_accepted=1).filter(Is_follow=1)
             for each_expert in expert_following:
@@ -706,6 +708,7 @@ def add_lecture(request):
     context['add_lect'] = add_lect
     student_attending = dict()
     student_requested = dict()
+    start_activity = dict()
     for each_lectr in add_lect:
         student_list = []
         student_req_list = []
@@ -719,6 +722,12 @@ def add_lecture(request):
             for each_st_req in st_req:
                 student_req_list.append(each_st_req.student)
             student_requested[each_lectr.id] = student_req_list
+        current_time = datetime.now().date()
+        if each_lectr.date <= current_time:
+            start_activity[each_lectr.id] = True
+        else:
+            start_activity[each_lectr.id] = False
+    context['start_activity'] = start_activity
     context['student_attending'] = student_attending
     context['student_requested'] = student_requested
     try:
@@ -1118,9 +1127,9 @@ def send_email(request):
     try:
         from django.core.mail import EmailMessage
         from django.core.mail import send_mail
-        send_mail('Testing', 'Testing', settings.EMAIL_HOST_USER, [settings.EMAIL_HOST_USER])
-        # email = EmailMessage('Testing', 'Testing', to=['komalmehta.8380@gmail.com'])
-        # email.send()
+        # send_mail('Testing', 'Testing', settings.EMAIL_HOST_USER, [settings.EMAIL_HOST_USER])
+        email = EmailMessage('Testing', 'Testing', to=['komalmehta.8380@gmail.com'])
+        email.send()
         return HttpResponseRedirect('/visitor/')
     except Exception as e:
         return HttpResponseRedirect(reverse('login'))
@@ -1207,6 +1216,7 @@ def user_admin(request):
     if user is not None:
         if user.is_active:
             context = dict()
+            context['admin'] = user
             expert_request = []
             expert_active = []
             student = Student.objects.all()

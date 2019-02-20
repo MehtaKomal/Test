@@ -139,15 +139,14 @@ STATIC_ROOT = '/static/'
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-#
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtpout.secureserver.net'
 EMAIL_USE_TLS = True
 # EMAIL_HOST = 'mail.corehike.com'
-EMAIL_PORT= 25
+EMAIL_PORT= 587
 DEFAULT_FROM_EMAIL = 'admin@corhike.com'
 EMAIL_HOST_USER = 'admin@corhike.com'
 EMAIL_HOST_PASSWORD = 'Admin@123'
-EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_HOST_USER = 'komalmehta.8380@gmail.com'
 # EMAIL_HOST_PASSWORD = 'jpndvkdmm'
 

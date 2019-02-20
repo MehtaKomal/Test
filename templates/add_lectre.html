@@ -191,7 +191,7 @@ function accept_request(student_id, activity_id,expert_id) {
                 {% for each_act_id, flag in start_activity.items %}
               {% if each_act_id == each_lecture.id %}
                   {% if flag %}
-                            <button type="button" class="btn btn-warning">Start Activity</button>
+                            <button type="button" class="btn btn-warning" onclick="start_activity_btn()">Start Activity</button>
                   {% endif %}
               {% endif %}
               {% endfor %}
@@ -210,6 +210,80 @@ function accept_request(student_id, activity_id,expert_id) {
 
 
     </section>
+
+
+<div id="myembed"></div>
+
+<script>
+  var clientId = "demo";
+
+  var tag = document.createElement("script");
+  tag.src = "https://www.gruveo.com/embed-api/";
+  var firstScriptTag = document.getElementsByTagName("script")[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  var embed;
+  function onGruveoEmbedAPIReady() {
+      alert("api ready");
+    embed = new Gruveo.Embed("myembed", {
+      responsive: 1,
+      embedParams: {
+        clientid: clientId,
+        color: "63b2de"
+      }
+    });
+
+    embed
+      .on("error", onEmbedError)
+      .on("requestToSignApiAuthToken", onEmbedRequestToSignApiAuthToken)
+      .on("ready", onEmbedReady)
+      .on("stateChange", onEmbedStateChange);
+  }
+
+  function onEmbedError(e) {
+    console.error("Received error " + e.error + ".");
+  }
+
+  function onEmbedRequestToSignApiAuthToken(e) {
+    // The below assumes that you have a server-side signer endpoint at /signer,
+    // where you pass e.token in the body of a POST request.
+    fetch('/signer', {
+      method: 'POST',
+      body: e.token
+    })
+      .then(function(res) {
+        if (res.status !== 200) {
+          return;
+        }
+        res.text()
+          .then(function(signature) {
+            embed.authorize(signature);
+          });
+      });
+  }
+
+  function onEmbedReady(e) {
+
+  }
+  function start_activity_btn()
+    {
+          $.ajax({url: "/accept_request/"+ student_id+"/"+activity_id+"/"+expert_id, success: function(result){
+                location.href= '/add_lecture'
+            }
+        });
+
+    let r = Math.random().toString(36).substring(7);
+    embed.call(r, true);
+    }
+
+  function onEmbedStateChange(e) {
+    if (e.state == "call") {
+      setTimeout(function() {
+        alert("10 seconds have passed");
+      }, 10000);
+    }
+  }
+</script>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
