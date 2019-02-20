@@ -9,13 +9,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.urls import reverse
 from django.shortcuts import render
+from django.utils.safestring import mark_safe
 from paypal.standard.forms import PayPalPaymentsForm
 from bridge.forms import ExpertForm, StudentForm, AddLectureForm
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from bridge.models import Expert, AddLecture, Student, Expert_Following, Expert_Student_Block, Student_block_count, \
     StudentLectureAttended, CommonNews, CommonExpertNews, ExpertOnlineStatus, NewsFeed, ExpertReview, StudentReview, \
-    LectureHistory, E2E, ExpertEnq, AdminNews, ActivityRequest
+    LectureHistory, E2E, ExpertEnq, AdminNews, ActivityRequest, ActivityStart
 
 hasher = PBKDF2PasswordHasher()
 
@@ -1339,8 +1340,15 @@ def send_activity_request(request, activity_id='', student_id='', expert_id=''):
 
 def recent_activity_student(request, student_id=''):
     activity = ActivityRequest.objects.filter(student_id=student_id)
+    activity_code = dict()
+    for each_Act in activity:
+        act = ActivityStart.objects.filter(activity_id=each_Act.activity_id).filter(is_start=1)
+        if act:
+            key = act.get(activity_id=each_Act.activity_id).key
+            activity_code[each_Act.activity_id] = key
     student_login = check_student_login(request.user.email)
     context = dict()
+    context['activity_code'] = activity_code
     context['activity'] = activity
     context['student'] = student_login
     news = CommonNews.objects.filter(student_id=student_login.id)
@@ -1384,3 +1392,20 @@ def show_expert_profile_by_student(request, expert_id=''):
             return render(request, 'show_expert_profile_by_student.html', context)
     except Exception as e:
         return HttpResponseRedirect(reverse('visitor'))
+
+def start_activity_notification(request, activity_id='', expert_id=''):
+    try:
+        if request.user.is_authenticated:
+
+            show_expert_follower = Expert_Following.objects.filter(Is_follow=1).filter(Is_follow_accepted=1).filter(
+                Expert_id_id=expert_id)
+            key = request.GET['code']
+            expert_name = request.user.first_name + " " + request.user.last_name
+            act = ActivityStart.objects.update_or_create(expert_id=expert_id, activity_id=activity_id, is_start=1, is_end=0, key=key)
+            for each_follower in show_expert_follower:
+                msg = expert_name+' has been started CORHIKE Activity. Join immediately !'
+                CommonNews.objects.create(news=msg,student_id=each_follower.Student_id_id)
+            return HttpResponse(True)
+    except Exception as e:
+        return HttpResponseRedirect(reverse('visitor'))
+

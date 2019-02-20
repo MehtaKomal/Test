@@ -44,7 +44,11 @@
                             </div>
                                 <!-- /.box-body -->
                                 <div class="box-footer">
-                                    <input class="btn btn-sm btn-warning disabled" type="button" name="Join activity" value="Join activity" id="{{ each_activity.activity.id }}_activity"/>
+                                    {% for key,value in activity_code.items %}
+                                        {% if each_activity.activity.id == key %}
+                                            <a class="btn btn-sm btn-warning" href='https://grv.to/{{ value }}' target="_blank" rel="noopener noreferrer" name="Join activity" id="{{ each_activity.activity.id }}_activity">Join activity</a>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>

@@ -26,7 +26,7 @@ from bridge.views import payment_process, register_expert, student_registration,
     student_review, student_review_show, user_admin, accept_expert, reject_expert, reject_student, \
     reset_student_block_count, send_connect_request, remove_connection, accept_connection_req, show_expert_profile, \
     expert_enq, set_expert_review, recent_activity_student, show_expert_profile_by_student, send_activity_request, \
-    accept_request
+    accept_request, start_activity_notification
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
@@ -98,6 +98,8 @@ urlpatterns = [
                       name='send_activity_request'),
     url(r'^accept_request/(?P<student_id>\d+)/(?P<activity_id>\d+)/(?P<expert_id>\d+)$', accept_request,
                       name='accept_request'),
+    url(r'^start_activity_notification/(?P<activity_id>\d+)/(?P<expert_id>\d+)$', start_activity_notification,
+                      name='start_activity_notification'),
 
               ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

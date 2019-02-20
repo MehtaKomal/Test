@@ -191,7 +191,7 @@ function accept_request(student_id, activity_id,expert_id) {
                 {% for each_act_id, flag in start_activity.items %}
               {% if each_act_id == each_lecture.id %}
                   {% if flag %}
-                            <button type="button" class="btn btn-warning" onclick="start_activity_btn()">Start Activity</button>
+                            <button type="button" class="btn btn-warning" onclick="start_activity_btn({{ each_act_id }},{{ expert.id }})">Start Activity</button>
                   {% endif %}
               {% endif %}
               {% endfor %}
@@ -265,15 +265,17 @@ function accept_request(student_id, activity_id,expert_id) {
   function onEmbedReady(e) {
 
   }
-  function start_activity_btn()
+  function start_activity_btn(activity_id,expert_id)
     {
-          $.ajax({url: "/accept_request/"+ student_id+"/"+activity_id+"/"+expert_id, success: function(result){
-                location.href= '/add_lecture'
+         let r = Math.random().toString(36).substring(7);
+          $.ajax({url: "/start_activity_notification/"+activity_id+"/"+expert_id,data:{'code':r}, success: function(result){
+
             }
         });
 
-    let r = Math.random().toString(36).substring(7);
-    embed.call(r, true);
+               embed.call(r, true);
+
+
     }
 
   function onEmbedStateChange(e) {

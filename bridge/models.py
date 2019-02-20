@@ -151,3 +151,12 @@ class ActivityRequest(models.Model):
     expert = models.ForeignKey(Expert, on_delete=models.CASCADE, null=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE, null=True)
     activity = models.ForeignKey(AddLecture, on_delete=models.CASCADE, null=True)
+
+
+class ActivityStart(models.Model):
+    expert = models.ForeignKey(Expert, on_delete=models.CASCADE, null=True)
+    activity = models.ForeignKey(AddLecture, on_delete=models.CASCADE, null=True)
+    key = models.CharField(max_length=200)
+    is_start = models.BooleanField(default=False)
+    is_end = models.BooleanField(default=False)
+
