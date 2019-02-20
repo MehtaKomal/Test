@@ -123,6 +123,7 @@ function accept_request(student_id, activity_id,expert_id) {
             </div>
             <!-- /.box-body -->
                 <div class="box-footer">
+                <div class="row">
                     <div class="col-md-5">
           <div class="box box-default collapsed-box">
             <div class="box-header with-border">
@@ -186,7 +187,14 @@ function accept_request(student_id, activity_id,expert_id) {
           </div>
           <!-- /.box -->
         </div>
-
+                </div>
+                {% for each_act_id, flag in start_activity.items %}
+              {% if each_act_id == each_lecture.id %}
+                  {% if flag %}
+                            <button type="button" class="btn btn-warning">Start Activity</button>
+                  {% endif %}
+              {% endif %}
+              {% endfor %}
                 </div>
           </div>
             {% endfor %}
