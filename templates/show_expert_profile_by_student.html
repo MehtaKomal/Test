@@ -137,10 +137,13 @@
 {#                                                {% endfor %}#}
                                         {% if activity_requested %}
                                             {% for key, value in activity_requested.items %}
-                                                {% if key == each_lecture.id %}
-                                                    <input class="btn btn-sm btn-warning" type="button" name="Interested" value="Interested" id="{{ each_lecture.id }}_activity"/>
+                                                {% if each_lecture.id in activity_requested %}
+                                                        {% if key == each_lecture.id %}
+                                                            <input class="btn btn-sm btn-warning" type="button" name="Interested" value="Requested" id="{{ each_lecture.id }}_activity"/>
+                                                        {% endif %}
                                                 {% else %}
                                                     <input class="btn btn-sm btn-success" type="button" name="Attend" value="Attend" id="{{ each_lecture.id }}_activity" onclick="send_activity_request({{ each_lecture.id }},{{ student.id }},{{ show_expert.id }})"/>
+
                                                 {% endif %}
                                             {% endfor %}
                                         {% else %}

@@ -26,6 +26,7 @@ function accept_request(student_id, activity_id,expert_id) {
               <li class="active"><a href="#tab_1" data-toggle="tab">ADD</a></li>
               <li><a href="#tab_2" data-toggle="tab">Recent Activity</a></li>
 
+                  <li><a href="#tab_3" data-toggle="tab">CORHIKE Activity</a></li>
 
             </ul>
             <div class="tab-content">
@@ -191,8 +192,12 @@ function accept_request(student_id, activity_id,expert_id) {
                 {% for each_act_id, flag in start_activity.items %}
               {% if each_act_id == each_lecture.id %}
                   {% if flag %}
+                      {% for key,value in student_attending.items %}
+                        {% if key == each_lecture.id %}
                             <button type="button" class="btn btn-warning" onclick="start_activity_btn({{ each_act_id }},{{ expert.id }})">Start Activity</button>
-                  {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        {% endif %}
               {% endif %}
               {% endfor %}
                 </div>
@@ -202,7 +207,10 @@ function accept_request(student_id, activity_id,expert_id) {
               <!-- /.tab-pane -->
             </div>
             <!-- /.tab-content -->
+              <div class="tab-pane" id="tab_3">
+                        <div id="myembed"></div>
 
+              </div>
           </div>
           </div>
           <!-- /.box -->
@@ -211,8 +219,6 @@ function accept_request(student_id, activity_id,expert_id) {
 
     </section>
 
-
-<div id="myembed"></div>
 
 <script>
   var clientId = "demo";
@@ -224,7 +230,6 @@ function accept_request(student_id, activity_id,expert_id) {
 
   var embed;
   function onGruveoEmbedAPIReady() {
-      alert("api ready");
     embed = new Gruveo.Embed("myembed", {
       responsive: 1,
       embedParams: {

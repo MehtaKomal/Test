@@ -1342,7 +1342,7 @@ def recent_activity_student(request, student_id=''):
     activity = ActivityRequest.objects.filter(student_id=student_id)
     activity_code = dict()
     for each_Act in activity:
-        act = ActivityStart.objects.filter(activity_id=each_Act.activity_id).filter(is_start=1)
+        act = ActivityStart.objects.filter(activity_id=each_Act.activity_id).filter(is_start=1).filter(is_end=0)
         if act:
             key = act.get(activity_id=each_Act.activity_id).key
             activity_code[each_Act.activity_id] = key
@@ -1387,7 +1387,7 @@ def show_expert_profile_by_student(request, expert_id=''):
             activity = ActivityRequest.objects.filter(student_id=student_login.id).filter(expert_id=expert_id)
             activity_dict = dict()
             for each_act in activity:
-                activity_dict[each_act.activity_id] = each_act
+                activity_dict[each_act.activity.id] = each_act
             context['activity_requested'] = activity_dict
             return render(request, 'show_expert_profile_by_student.html', context)
     except Exception as e:
