@@ -87,11 +87,11 @@ DATABASES = {
     }
     # 'default': {
     #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': os.path.join(BASE_DIR, 'Sample/demo_corhike_mysql'),
-    #     'USER': 'root',
-    #     'PASSWORD': 'root',
-    #     'HOST': 'localhost',
-    #     'PORT': '3306'
+    #     'NAME': 'corhike_bridge',
+    #     'USER': 'corhike_abhi',
+    #     'PASSWORD': 'Abhi@12345#',
+    #     'HOST': '43.225.52.194',
+    #     'PORT': '2083'
     # }
 }
 
